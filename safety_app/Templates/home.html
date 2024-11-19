@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <style>
+        .logo{
+            {% comment %} display:flex; {% endcomment %}
+            text-align:center;
+            margin: -3px;
+        }
+        nav a{
+            margin:45px;
+            cursor:pointer;
+            color:black;
+        }
+       nav a:hover{
+            font-weight:bolder;
+        }
+        h1{
+            text-align:center;
+            margin: -11px;
+        }
+        nav{
+            text-align:center;
+            margin: 35px;
+        }
+        button{
+            cursor:pointer;
+            margin: -3px 46%;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="https://cdn.pixabay.com/photo/2024/10/08/04/41/ai-generated-9104305_960_720.png" alt="logo" width="100px">
+    </div>
+    <h1>SAFHER</h1>
+    <nav>
+        <a href="{% url 'register' %}">Register</a>
+        <a href="{% url 'alert' %}">Send Alert</a>
+        <a href="{% url 'about' %}">About Us</a>
+    </nav>
+</body>
+</html>
+<!-- tracking/templates/home.html -->
+
+
+<script>
+    document.getElementById('alertButton').addEventListener('click', () => {
+        let emergencyType = 'Emergency';  // Can be dynamic based on user input
+        let customMessage = prompt("Enter additional message (optional):");
+        
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                let latitude = position.coords.latitude;
+                let longitude = position.coords.longitude;
+                
+                fetch('/tracking/send-alert/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        latitude: latitude,
+                        longitude: longitude,
+                        emergency_type: emergencyType,
+                        custom_message: customMessage
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Alert sent successfully');
+                })
+                .catch((error) => {
+                    console.error('Error sending alert:', error);
+                });
+            }, (error) => {
+                console.error('Error getting location:', error);
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    });
+</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<div id="map" style="height: 400px; width: 60%; margin: 15px 300px;"></div>
+
+<script>
+    const map = L.map('map').setView([0, 0], 13); // Default view
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+    
+    // Update the map with the user's location
+    function updateMap(latitude, longitude) {
+        map.setView([latitude, longitude], 13);
+        L.marker([latitude, longitude]).addTo(map)
+        .bindPopup('User Location')
+        .openPopup();
+    }
+    
+    // Fetch and update the user's location in real-time
+    navigator.geolocation.getCurrentPosition((position) => {
+        updateMap(position.coords.latitude, position.coords.longitude);
+    });
+</script>
+<button id="alertButton">Send Location</button>

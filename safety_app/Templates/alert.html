@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Alert</title>
+    <style>
+        form{
+            margin: 146px 44%;
+        }
+        button{
+            margin: 12px 46px;
+            cursor: pointer;
+        }
+        textarea{
+            width: 86%;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required>
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+        <button type="submit">Send Alert</button>
+    </form>
+</body>
+</html>

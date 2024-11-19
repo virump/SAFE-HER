@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track Location</title>
+</head>
+<body>
+    <h1>Track Location</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" required>
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" required>
+        <button type="submit">Send Location</button>
+    </form>
+</body>
+</html>
+<script>
+    function sendLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                console.log('Latitude:', position.coords.latitude);
+                console.log('Longitude:', position.coords.longitude);
+                // Make the API call to your backend here
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+</script>
