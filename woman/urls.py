@@ -24,7 +24,7 @@ from safety_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.home, name='home'),
+    path('',views.index, name='index'),
     path('register/', views.register, name='register'),
     path('alert/', views.alert, name='alert'),
     path('success/', views.success, name='success'),

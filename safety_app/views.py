@@ -68,8 +68,8 @@ def send_alert(request):
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
-def home(request):
-    return render(request, 'home.html')
+def index(request):
+    return render(request, 'index.html')
 
 def register(request):
     if request.method == 'POST':
